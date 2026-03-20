@@ -1,16 +1,20 @@
 import { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import ItemInputForm from "@/components/kasse/ItemInputForm";
 import CurrentBill from "@/components/kasse/CurrentBill";
 import CheckoutModal from "@/components/kasse/CheckoutModal";
 import PasswordGate from "@/components/kasse/PasswordGate";
+import { useBazaar } from "@/lib/BazaarContext";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ShoppingCart, LogOut } from "lucide-react";
+import { ShoppingCart, LogOut, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 
 export default function Kasse() {
+  const { selectedBazaar, selectedRole, clearBazaar } = useBazaar();
+  const navigate = useNavigate();
   const [unlocked, setUnlocked] = useState(false);
   const [items, setItems] = useState([]);
   const [showCheckout, setShowCheckout] = useState(false);
@@ -18,8 +22,9 @@ export default function Kasse() {
   const [registerName, setRegisterName] = useState("Kasse 1");
 
   const { data: settingsData } = useQuery({
-    queryKey: ["settings"],
-    queryFn: () => base44.entities.Settings.list(),
+    queryKey: ["settings", selectedBazaar?.id],
+    queryFn: () => base44.entities.Settings.filter({ bazaar_id: selectedBazaar?.id }),
+    enabled: !!selectedBazaar,
     initialData: [],
   });
 
@@ -27,6 +32,12 @@ export default function Kasse() {
     settingsData?.find((s) => s.key === "commission_rate")?.value ?? "10"
   );
   const kassePassword = settingsData?.find((s) => s.key === "kasse_password")?.value ?? null;
+
+  // Redirect if no bazaar or wrong role
+  if (!selectedBazaar || selectedRole !== "cashier") {
+    navigate("/select");
+    return null;
+  }
 
   if (kassePassword && !unlocked) {
     return <PasswordGate correctPassword={kassePassword} onUnlock={() => setUnlocked(true)} />;
@@ -57,6 +68,7 @@ export default function Kasse() {
       const salesData = items.map((item) => {
         const commissionAmount = (item.price * commissionRate) / 100;
         return {
+          bazaar_id: selectedBazaar.id,
           transaction_id: transactionId,
           cash_register: registerName,
           seller_number: item.sellerNumber,
@@ -93,10 +105,10 @@ export default function Kasse() {
           </div>
           <div>
             <h1 className="text-lg font-semibold text-foreground">KindermarktKasse</h1>
-            <p className="text-xs text-muted-foreground">Kassierer-Ansicht</p>
+            <p className="text-xs text-muted-foreground">{selectedBazaar.name}</p>
           </div>
         </div>
-        <div className="flex flex-col items-end gap-2">
+        <div className="flex items-center gap-2">
           <Select value={registerName} onValueChange={setRegisterName}>
             <SelectTrigger className="w-32 h-8 text-sm">
               <SelectValue />
@@ -111,6 +123,15 @@ export default function Kasse() {
           <Button
             variant="outline"
             size="sm"
+            onClick={() => { clearBazaar(); navigate("/select"); }}
+            className="gap-2 text-muted-foreground"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Basar wechseln
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
             onClick={() => base44.auth.logout()}
             className="gap-2 text-muted-foreground"
           >
@@ -122,12 +143,9 @@ export default function Kasse() {
 
       {/* Main Layout */}
       <div className="flex flex-col lg:flex-row gap-0 h-[calc(100vh-73px)]">
-        {/* Left: Input Form */}
         <div className="lg:w-1/2 p-6 flex flex-col gap-6">
           <ItemInputForm onAddItem={addItem} />
         </div>
-
-        {/* Right: Current Bill */}
         <div className="lg:w-1/2 border-t lg:border-t-0 lg:border-l border-border bg-card flex flex-col">
           <CurrentBill
             items={items}
