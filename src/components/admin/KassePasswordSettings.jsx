@@ -32,6 +32,7 @@ export default function KassePasswordSettings({ settings, bazaarId, onUpdate }) 
       await base44.entities.Settings.update(existing.id, { value: password });
     } else {
       await base44.entities.Settings.create({
+        bazaar_id: bazaarId,
         key: "kasse_password",
         value: password,
         description: "Passwort für den Kassen-Zugang",

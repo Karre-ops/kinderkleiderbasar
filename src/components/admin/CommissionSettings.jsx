@@ -27,6 +27,7 @@ export default function CommissionSettings({ settings, bazaarId, onUpdate }) {
       await base44.entities.Settings.update(existing.id, { value: String(parsed) });
     } else {
       await base44.entities.Settings.create({
+        bazaar_id: bazaarId,
         key: "commission_rate",
         value: String(parsed),
         description: "Prozentualer Anteil für den Kindergarten",
