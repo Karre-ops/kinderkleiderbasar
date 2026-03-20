@@ -65,22 +65,21 @@ export default function Kasse() {
     const transactionId = `TXN-${Date.now()}`;
     const now = new Date().toISOString();
 
-    await Promise.all(
-      items.map((item) => {
-        const commissionAmount = (item.price * commissionRate) / 100;
-        return base44.entities.Sale.create({
-          bazaar_id: selectedBazaar.id,
-          transaction_id: transactionId,
-          seller_number: item.sellerNumber,
-          price: item.price,
-          commission_rate: commissionRate,
-          commission_amount: commissionAmount,
-          seller_payout: item.price - commissionAmount,
-          transaction_completed_at: now,
-          cashier_name: cashierName,
-        });
-      })
-    );
+    const saleRecords = items.map((item) => {
+      const commissionAmount = (item.price * commissionRate) / 100;
+      return {
+        bazaar_id: selectedBazaar.id,
+        transaction_id: transactionId,
+        seller_number: item.sellerNumber,
+        price: item.price,
+        commission_rate: commissionRate,
+        commission_amount: commissionAmount,
+        seller_payout: item.price - commissionAmount,
+        transaction_completed_at: now,
+        cashier_name: cashierName,
+      };
+    });
+    await base44.entities.Sale.bulkCreate(saleRecords);
 
     toast.success(`Transaktion ${transactionId} abgeschlossen!`);
     setItems([]);
