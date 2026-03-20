@@ -89,6 +89,7 @@ export default function ItemInputForm({ onAddItem }) {
             placeholder="z.B. 042"
             maxLength={3}
             autoFocus
+            inputMode="numeric"
             className="text-2xl font-bold h-14 tracking-widest text-center border-2 focus:border-primary transition-colors"
           />
           <p className="text-xs text-muted-foreground">3-stellige Nummer (001–999) · Enter oder Tab zum Preis</p>
