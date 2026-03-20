@@ -3,11 +3,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CheckCircle2, Loader2 } from "lucide-react";
+import { CheckCircle2, Loader2, AlertTriangle } from "lucide-react";
 
-export default function CheckoutModal({ items, total, commissionRate, onConfirm, onCancel, isSubmitting }) {
+export default function CheckoutModal({ items, total, commissionRate, maxItemPrice, onConfirm, onCancel, isSubmitting }) {
   const [cashierName, setCashierName] = useState("");
   const commissionTotal = (total * commissionRate) / 100;
+  const highPriceItems = items.filter((i) => i.price > maxItemPrice);
 
   return (
     <Dialog open onOpenChange={onCancel}>
