@@ -165,6 +165,11 @@ export default function Admin() {
                 bazaarId={selectedBazaar.id}
                 onUpdate={refetchSettings}
               />
+              <MaxPriceSettings
+                settings={settings}
+                bazaarId={selectedBazaar.id}
+                onUpdate={refetchSettings}
+              />
             </div>
           </TabsContent>
 
