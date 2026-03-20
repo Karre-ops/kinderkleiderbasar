@@ -15,14 +15,16 @@ export default function TransactionList({ sales }) {
     return Object.values(map).sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt));
   }, [sales]);
 
+  const num = (n) => n.toFixed(2).replace(".", ",");
+
   const exportCSV = () => {
     const header = "Transaktions-ID;Kasse;Kassierer;Zeitpunkt;Verkäufer;Preis (€);Kindergarten (€)";
     const rows = sales.map(
       (s) =>
-        `${s.transaction_id};${s.cash_register};${s.cashier_name};${s.transaction_completed_at};${s.seller_number};${(s.price || 0).toFixed(2)};${(s.commission_amount || 0).toFixed(2)}`
+        `${s.transaction_id};${s.cash_register};${s.cashier_name};${s.transaction_completed_at};${s.seller_number};${num(s.price || 0)};${num(s.commission_amount || 0)}`
     );
     const csv = [header, ...rows].join("\n");
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
