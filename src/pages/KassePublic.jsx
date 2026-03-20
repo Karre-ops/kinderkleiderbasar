@@ -1,73 +1,47 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
+import KasseBase from "@/components/kasse/KasseBase.jsx";
 import { ShoppingCart } from "lucide-react";
-import ItemInputForm from "@/components/kasse/ItemInputForm.jsx";
-import CurrentBill from "@/components/kasse/CurrentBill.jsx";
-import CheckoutModal from "@/components/kasse/CheckoutModal.jsx";
-import PasswordGate from "@/components/kasse/PasswordGate.jsx";
-import { toast } from "sonner";
+import { BAZAAR_ID_MIN_LENGTH } from "@/lib/kasseConstants";
 
 export default function KassePublic() {
-  const itemCounter = useRef(0);
   const urlParams = new URLSearchParams(window.location.search);
   const bazaarId = urlParams.get("bazaar");
   const kasseNummer = urlParams.get("kasse") || "1";
 
-  const [bazaar, setBazaar] = useState(null);
-  const [commissionRate, setCommissionRate] = useState(10);
-  const [maxItemPrice, setMaxItemPrice] = useState(300);
-  const [hasPassword, setHasPassword] = useState(false);
+  const [bazaarData, setBazaarData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
-  const [unlocked, setUnlocked] = useState(false);
-  const sessionPassword = useRef(null); // K1: store verified password for checkout
-
-  const [items, setItems] = useState([]);
-  const [showCheckout, setShowCheckout] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    if (!bazaarId) { setNotFound(true); setLoading(false); return; }
-    const load = async () => {
-      const res = await base44.functions.invoke("kassePublic", { action: "loadBazaar", bazaarId });
-      const { bazaars, hasPassword: hp, commissionRate: cr, maxItemPrice: mp } = res.data;
-      if (!bazaars.length || !bazaars[0].is_active) { setNotFound(true); }
-      else { setBazaar(bazaars[0]); setCommissionRate(cr ?? 10); setMaxItemPrice(mp ?? 300); setHasPassword(!!hp); }
+    if (!bazaarId || bazaarId.length < BAZAAR_ID_MIN_LENGTH) {
+      setNotFound(true);
       setLoading(false);
+      return;
+    }
+
+    const load = async () => {
+      try {
+        const res = await base44.functions.invoke("kassePublic", {
+          action: "loadBazaar",
+          bazaarId,
+        });
+        const { bazaars } = res.data;
+        if (!bazaars.length || !bazaars[0].is_active) {
+          setNotFound(true);
+        } else {
+          setBazaarData(bazaars[0]);
+        }
+      } catch (err) {
+        console.error("Error loading bazaar:", err);
+        setNotFound(true);
+      } finally {
+        setLoading(false);
+      }
     };
+
     load();
   }, [bazaarId]);
-
-  const total = items.reduce((sum, i) => sum + i.price, 0);
-
-  const handleAddItem = (sellerNumber, price) => {
-    setItems((prev) => [...prev, { id: ++itemCounter.current, sellerNumber, price }]);
-  };
-
-  const handleRemoveItem = (id) => {
-    setItems((prev) => prev.filter((i) => i.id !== id));
-  };
-
-  const handleConfirmCheckout = async (cashierName) => {
-    setIsSubmitting(true);
-    try {
-      const res = await base44.functions.invoke("kassePublic", {
-        action: "checkout",
-        bazaarId,
-        kasseNummer,
-        items,
-        cashierName,
-        password: sessionPassword.current, // K1: send verified password for re-auth
-      });
-      toast.success(`Transaktion ${res.data.transactionId} abgeschlossen!`);
-      setItems([]);
-      setShowCheckout(false);
-    } catch (err) {
-      toast.error("Fehler beim Abschluss der Transaktion. Bitte erneut versuchen.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   if (loading) {
     return (
@@ -89,55 +63,26 @@ export default function KassePublic() {
     );
   }
 
-  if (hasPassword && !unlocked) {
-    return (
-      <PasswordGate
-        bazaarId={bazaarId}
-        onUnlock={(pw) => { sessionPassword.current = pw; setUnlocked(true); }}
-      />
-    );
-  }
+  const loadSettings = async () => {
+    const res = await base44.functions.invoke("kassePublic", {
+      action: "loadBazaar",
+      bazaarId,
+    });
+    const { hasPassword, commissionRate, maxItemPrice } = res.data;
+    return {
+      hasPassword: !!hasPassword,
+      commissionRate: commissionRate ?? 10,
+      maxItemPrice: maxItemPrice ?? 300,
+    };
+  };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <header className="bg-card border-b border-border px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center">
-            <ShoppingCart className="w-5 h-5 text-primary-foreground" />
-          </div>
-          <div>
-            <h1 className="text-lg font-semibold text-foreground">KindermarktKasse</h1>
-            <p className="text-xs text-muted-foreground">{bazaar.name} · Kasse {kasseNummer}</p>
-          </div>
-        </div>
-      </header>
-
-      <div className="flex-1 flex flex-col lg:flex-row gap-6 p-6">
-        <div className="lg:w-96 shrink-0">
-          <ItemInputForm onAddItem={handleAddItem} />
-        </div>
-        <div className="flex-1 bg-card rounded-2xl border border-border overflow-hidden flex flex-col">
-          <CurrentBill
-            items={items}
-            onRemoveItem={handleRemoveItem}
-            total={total}
-            commissionRate={commissionRate}
-            onCheckout={() => setShowCheckout(true)}
-          />
-        </div>
-      </div>
-
-      {showCheckout && (
-        <CheckoutModal
-          items={items}
-          total={total}
-          commissionRate={commissionRate}
-          maxItemPrice={maxItemPrice}
-          onConfirm={handleConfirmCheckout}
-          onCancel={() => setShowCheckout(false)}
-          isSubmitting={isSubmitting}
-        />
-      )}
-    </div>
+    <KasseBase
+      bazaarId={bazaarId}
+      kasseNummer={kasseNummer}
+      bazaarName={bazaarData?.name || "Basar"}
+      loadSettings={loadSettings}
+      showLogout={false}
+    />
   );
 }
