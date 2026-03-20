@@ -37,8 +37,6 @@ export default function KassePublic() {
     load();
   }, [bazaarId]);
 
-  const commissionRate = parseFloat(settings?.find((s) => s.key === "commission_rate")?.value ?? "10");
-  const kassePassword = settings?.find((s) => s.key === "kasse_password")?.value;
   const total = items.reduce((sum, i) => sum + i.price, 0);
 
   const handleAddItem = (sellerNumber, price) => {
@@ -58,7 +56,7 @@ export default function KassePublic() {
         kasseNummer,
         items,
         cashierName,
-        commissionRate,
+        password: sessionPassword.current, // K1: send verified password for re-auth
       });
       toast.success(`Transaktion ${res.data.transactionId} abgeschlossen!`);
       setItems([]);
