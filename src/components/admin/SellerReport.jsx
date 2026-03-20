@@ -76,7 +76,7 @@ export default function SellerReport({ sales, commissionRate }) {
           </thead>
           <tbody>
             {sellerData.map((s, i) => (
-              <tr key={s.sellerNumber} className={i % 2 === 0 ? "bg-card" : "bg-muted/20"}>
+              <tr key={s.sellerNumber} className={`group ${i % 2 === 0 ? "bg-card" : "bg-muted/20"}`}>
                 <td className="px-6 py-3 font-bold text-foreground">
                   <div className="flex items-center gap-2">
                     <span>#{s.sellerNumber}</span>
