@@ -46,7 +46,7 @@ export default function BazaarSelection() {
   const handleSelect = (bazaar, role) => {
     selectBazaar({ id: bazaar.id, name: bazaar.name }, role);
     if (role === "admin") navigate("/admin");
-    else navigate("/");
+    else navigate("/kasse-intern");
   };
 
   const handleCopyLink = (bazaar, kasseNummer) => {
