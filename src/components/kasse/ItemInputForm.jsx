@@ -73,10 +73,7 @@ export default function ItemInputForm({ onAddItem }) {
     onAddItem(num, parsedPrice);
     setSellerNumber("");
     setPrice("");
-    setTimeout(() => {
-      sellerRef.current?.focus();
-      sellerRef.current?.select();
-    }, 150);
+    sellerRef.current?.focus();
   };
 
   return (
