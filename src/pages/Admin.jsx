@@ -69,6 +69,18 @@ export default function Admin() {
         </div>
       </header>
 
+      <div className="bg-card border-b border-border px-6 py-2 flex justify-end">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => base44.auth.logout()}
+          className="gap-2 text-muted-foreground"
+        >
+          <LogOut className="w-4 h-4" />
+          Abmelden
+        </Button>
+      </div>
+
       <div className="p-6 max-w-7xl mx-auto">
         <AdminStats sales={sales} commissionRate={commissionRate} />
 
@@ -98,10 +110,6 @@ export default function Admin() {
 
           <TabsContent value="transactions" className="mt-6">
             <TransactionList sales={sales} />
-          </TabsContent>
-
-          <TabsContent value="access" className="mt-6">
-            <BazaarAccessSettings bazaarId={selectedBazaar.id} />
           </TabsContent>
 
           <TabsContent value="settings" className="mt-6">
