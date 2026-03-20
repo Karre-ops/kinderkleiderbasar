@@ -29,7 +29,12 @@ export default function Admin() {
     settings?.find((s) => s.key === "commission_rate")?.value ?? "10"
   );
 
-  if (user?.role !== "admin") {
+  if (!user) {
+    base44.auth.redirectToLogin("/admin");
+    return null;
+  }
+
+  if (user.role !== "admin") {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
