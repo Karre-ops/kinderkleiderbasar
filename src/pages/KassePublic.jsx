@@ -60,6 +60,7 @@ export default function KassePublic() {
         return base44.entities.Sale.create({
           bazaar_id: bazaarId,
           transaction_id: transactionId,
+          cash_register: kasseNummer,
           seller_number: item.sellerNumber,
           price: item.price,
           commission_rate: commissionRate,
@@ -109,7 +110,7 @@ export default function KassePublic() {
           </div>
           <div>
             <h1 className="text-lg font-semibold text-foreground">KindermarktKasse</h1>
-            <p className="text-xs text-muted-foreground">{bazaar.name}</p>
+            <p className="text-xs text-muted-foreground">{bazaar.name} · Kasse {kasseNummer}</p>
           </div>
         </div>
       </header>

@@ -168,15 +168,23 @@ export default function BazaarSelection() {
                           )}
                         </div>
                         {roles.includes("admin") && (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="gap-2 w-full text-muted-foreground"
-                            onClick={() => handleCopyLink(bazaar)}
-                          >
-                            <Link2 className="w-4 h-4" />
-                            Kassen-Link kopieren
-                          </Button>
+                          <div className="space-y-2">
+                            <p className="text-xs text-muted-foreground font-medium">Kassen-Links kopieren:</p>
+                            <div className="grid grid-cols-2 gap-2">
+                              {[1, 2, 3, 4].map((nr) => (
+                                <Button
+                                  key={nr}
+                                  variant="outline"
+                                  size="sm"
+                                  className="gap-2 text-muted-foreground"
+                                  onClick={() => handleCopyLink(bazaar, nr)}
+                                >
+                                  <Link2 className="w-4 h-4" />
+                                  Kasse {nr}
+                                </Button>
+                              ))}
+                            </div>
+                          </div>
                         )}
                       </div>
                     )}
