@@ -12,12 +12,11 @@ import { Button } from "@/components/ui/button";
 import { ShoppingCart, ArrowLeft, LogOut } from "lucide-react";
 import { toast } from "sonner";
 
-let itemCounter = 0;
-
 export default function Kasse() {
   const { user } = useAuth();
   const { selectedBazaar, selectedRole, clearBazaar } = useBazaar();
   const navigate = useNavigate();
+  const itemCounter = useRef(0);
 
   const [items, setItems] = useState([]);
   const [showCheckout, setShowCheckout] = useState(false);

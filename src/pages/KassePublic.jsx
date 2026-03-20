@@ -7,9 +7,8 @@ import CheckoutModal from "@/components/kasse/CheckoutModal.jsx";
 import PasswordGate from "@/components/kasse/PasswordGate.jsx";
 import { toast } from "sonner";
 
-let itemCounter = 0;
-
 export default function KassePublic() {
+  const itemCounter = useRef(0);
   const urlParams = new URLSearchParams(window.location.search);
   const bazaarId = urlParams.get("bazaar");
   const kasseNummer = urlParams.get("kasse") || "1";
