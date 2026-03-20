@@ -16,6 +16,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useState } from "react";
 
 export default function Admin() {
+  const [activeTab, setActiveTab] = useState("sellers");
   const { user } = useAuth();
   const { selectedBazaar, selectedRole, clearBazaar } = useBazaar();
   const navigate = useNavigate();
