@@ -12,6 +12,7 @@ let itemCounter = 0;
 export default function KassePublic() {
   const urlParams = new URLSearchParams(window.location.search);
   const bazaarId = urlParams.get("bazaar");
+  const kasseNummer = urlParams.get("kasse") || "1";
 
   const [bazaar, setBazaar] = useState(null);
   const [settings, setSettings] = useState([]);

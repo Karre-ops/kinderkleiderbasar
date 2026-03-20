@@ -49,10 +49,10 @@ export default function BazaarSelection() {
     else navigate("/");
   };
 
-  const handleCopyLink = (bazaar) => {
-    const url = `${window.location.origin}/kasse?bazaar=${bazaar.id}`;
+  const handleCopyLink = (bazaar, kasseNummer) => {
+    const url = `${window.location.origin}/kasse?bazaar=${bazaar.id}&kasse=${kasseNummer}`;
     navigator.clipboard.writeText(url);
-    toast.success("Kassen-Link kopiert!");
+    toast.success(`Kassen-Link ${kasseNummer} kopiert!`);
   };
 
   const handleBazaarCreated = (bazaar) => {
