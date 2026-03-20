@@ -24,8 +24,9 @@ Deno.serve(async (req) => {
       const hasPassword = settings.some((s) => s.key === "kasse_password");
       // A1: Send commissionRate from server so client never needs to read settings directly
       const commissionRate = parseFloat(settings.find((s) => s.key === "commission_rate")?.value ?? "10");
+      const maxItemPrice = parseFloat(settings.find((s) => s.key === "max_item_price")?.value ?? "300");
 
-      return Response.json({ bazaars, hasPassword, commissionRate });
+      return Response.json({ bazaars, hasPassword, commissionRate, maxItemPrice });
     }
 
     if (action === "verifyPassword") {
