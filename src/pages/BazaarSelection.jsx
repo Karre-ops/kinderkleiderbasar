@@ -22,21 +22,13 @@ export default function BazaarSelection() {
 
   const load = async () => {
     if (!user) return;
-    const [allBazaars, allAccess] = await Promise.all([
+    const [allBazaars, allAccess, allSettings] = await Promise.all([
       base44.entities.Bazaar.filter({ is_active: true }),
       base44.entities.BazaarAccess.filter({ user_email: user.email }),
+      base44.entities.Settings.filter({ key: "kasse_count" }),
     ]);
-    // Load kasse_count via backend for each bazaar
     const settingsMap = {};
-    for (const bazaar of allBazaars) {
-      try {
-        const res = await base44.functions.invoke("kassePublic", {
-          action: "loadKasseSettings",
-          bazaarId: bazaar.id,
-        });
-        settingsMap[bazaar.id] = res.data.maxItemPrice; // Actually use maxItemPrice from server
-      } catch (_) {}
-    }
+    allSettings.forEach((s) => { settingsMap[s.bazaar_id] = s.value; });
     setBazaarSettings(settingsMap);
 
     if (user.role === "admin") {
