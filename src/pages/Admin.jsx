@@ -6,6 +6,7 @@ import AdminStats from "@/components/admin/AdminStats";
 import SellerReport from "@/components/admin/SellerReport";
 import TransactionList from "@/components/admin/TransactionList";
 import CommissionSettings from "@/components/admin/CommissionSettings";
+import KassePasswordSettings from "@/components/admin/KassePasswordSettings";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { BarChart3, List, Settings, ShoppingCart, LogOut } from "lucide-react";

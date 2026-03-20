@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import ItemInputForm from "@/components/kasse/ItemInputForm";
 import CurrentBill from "@/components/kasse/CurrentBill";
 import CheckoutModal from "@/components/kasse/CheckoutModal";
+import PasswordGate from "@/components/kasse/PasswordGate";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ShoppingCart, LogOut } from "lucide-react";
