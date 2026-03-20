@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { ShoppingCart } from "lucide-react";
 import ItemInputForm from "@/components/kasse/ItemInputForm.jsx";

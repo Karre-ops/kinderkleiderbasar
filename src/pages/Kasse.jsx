@@ -52,7 +52,7 @@ export default function Kasse() {
   const total = items.reduce((sum, i) => sum + i.price, 0);
 
   const handleAddItem = (sellerNumber, price) => {
-    setItems((prev) => [...prev, { id: ++itemCounter, sellerNumber, price }]);
+    setItems((prev) => [...prev, { id: ++itemCounter.current, sellerNumber, price }]);
   };
 
   const handleRemoveItem = (id) => {
