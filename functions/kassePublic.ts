@@ -23,7 +23,8 @@ Deno.serve(async (req) => {
       // K1: Password verification happens server-side
       const settings = await base44.asServiceRole.entities.Settings.filter({ bazaar_id: bazaarId });
       const stored = settings.find((s) => s.key === "kasse_password")?.value;
-      if (!stored || stored === password) {
+      // A2: Only grant access if stored password exists AND matches
+      if (stored && stored === password) {
         return Response.json({ ok: true });
       }
       return Response.json({ ok: false }, { status: 401 });

@@ -14,7 +14,7 @@ export default function KassePublic() {
   const kasseNummer = urlParams.get("kasse") || "1";
 
   const [bazaar, setBazaar] = useState(null);
-  const [settings, setSettings] = useState([]);
+  const [commissionRate, setCommissionRate] = useState(10);
   const [hasPassword, setHasPassword] = useState(false);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
