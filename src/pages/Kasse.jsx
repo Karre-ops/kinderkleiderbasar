@@ -80,7 +80,7 @@ export default function Kasse() {
         kasseNummer: "intern",
         items,
         cashierName,
-        // K2: commissionRate is now loaded server-side, not sent by client
+        password: sessionPasswordRef.current,
       });
       toast.success(`Transaktion ${res.data.transactionId} abgeschlossen!`);
       setItems([]);
