@@ -23,16 +23,23 @@ export default function Kasse() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [unlocked, setUnlocked] = useState(false);
 
-  const { data: settings = [] } = useQuery({
-    queryKey: ["settings", selectedBazaar?.id],
-    queryFn: () => base44.entities.Settings.filter({ bazaar_id: selectedBazaar?.id }),
+  const sessionPasswordRef = useRef(null);
+  
+  const { data: kasseSettings = { commissionRate: 10, maxItemPrice: 300, hasPassword: false } } = useQuery({
+    queryKey: ["kasseSettings", selectedBazaar?.id],
+    queryFn: async () => {
+      const res = await base44.functions.invoke("kassePublic", {
+        action: "loadKasseSettings",
+        bazaarId: selectedBazaar?.id,
+      });
+      return res.data;
+    },
     enabled: !!selectedBazaar,
   });
 
-  const commissionRate = parseFloat(
-    settings?.find((s) => s.key === "commission_rate")?.value ?? "10"
-  );
-  const kassePassword = settings?.find((s) => s.key === "kasse_password")?.value;
+  const commissionRate = kasseSettings.commissionRate;
+  const maxItemPrice = kasseSettings.maxItemPrice;
+  const hasPassword = kasseSettings.hasPassword;
 
   if (!user) {
     base44.auth.redirectToLogin("/");
