@@ -11,7 +11,9 @@ import KassePasswordSettings from "@/components/admin/KassePasswordSettings";
 import BazaarAccessSettings from "@/components/admin/BazaarAccessSettings.jsx";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { BarChart3, List, Settings, LogOut, ArrowLeft, Users } from "lucide-react";
+import { BarChart3, List, Settings, LogOut, ArrowLeft, Users, MoreHorizontal } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useState } from "react";
 
 export default function Admin() {
   const { user } = useAuth();
