@@ -57,7 +57,7 @@ export default function ItemInputForm({ onAddItem }) {
 
   const handleAdd = () => {
     const num = sellerNumber.padStart(3, "0");
-    const parsedPrice = parseFloat(price);
+    const parsedPrice = parseFloat(price.replace(",", "."));
 
     if (!sellerNumber || sellerNumber.length < 1) {
       toast.error("Bitte Verkäufernummer eingeben");
