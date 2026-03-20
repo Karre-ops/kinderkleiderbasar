@@ -101,9 +101,6 @@ export default function Kasse() {
               <SelectItem value="Kasse 4">Kasse 4</SelectItem>
             </SelectContent>
           </Select>
-          <span className="text-sm text-muted-foreground">
-            Provision: <span className="font-medium text-foreground">{commissionRate}%</span>
-          </span>
           <Button
             variant="outline"
             size="sm"
