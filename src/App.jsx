@@ -4,7 +4,6 @@ import { queryClientInstance } from '@/lib/query-client'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
-export { useAuth };
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 // Add page imports here
 import Kasse from "./pages/Kasse";

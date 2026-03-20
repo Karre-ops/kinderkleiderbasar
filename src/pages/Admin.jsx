@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { BarChart3, List, Settings, ShoppingCart, LogOut } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 
+
 export default function Admin() {
   const { user } = useAuth();
 
