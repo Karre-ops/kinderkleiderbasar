@@ -26,6 +26,11 @@ export default function Kasse() {
   const commissionRate = parseFloat(
     settingsData?.find((s) => s.key === "commission_rate")?.value ?? "10"
   );
+  const kassePassword = settingsData?.find((s) => s.key === "kasse_password")?.value ?? null;
+
+  if (kassePassword && !unlocked) {
+    return <PasswordGate correctPassword={kassePassword} onUnlock={() => setUnlocked(true)} />;
+  }
 
   const addItem = (sellerNumber, price) => {
     setItems((prev) => [...prev, { sellerNumber, price, id: Date.now() }]);
