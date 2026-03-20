@@ -58,6 +58,7 @@ const AppRoutes = () => {
     <Routes>
       <Route path="/select" element={<BazaarSelection />} />
       <Route path="/" element={<Kasse />} />
+      <Route path="/kasse" element={<KassePublic />} />
       <Route path="/admin" element={<Admin />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
