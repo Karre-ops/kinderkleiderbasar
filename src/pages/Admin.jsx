@@ -66,15 +66,6 @@ export default function Admin() {
             <ArrowLeft className="w-4 h-4" />
             Basar wechseln
           </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => base44.auth.logout()}
-            className="gap-2 text-muted-foreground"
-          >
-            <LogOut className="w-4 h-4" />
-            Abmelden
-          </Button>
         </div>
       </header>
 
@@ -91,13 +82,13 @@ export default function Admin() {
               <List className="w-4 h-4" />
               Transaktionen
             </TabsTrigger>
-            <TabsTrigger value="access" className="gap-2">
-              <Users className="w-4 h-4" />
-              Zugriffsrechte
-            </TabsTrigger>
             <TabsTrigger value="settings" className="gap-2">
               <Settings className="w-4 h-4" />
               Einstellungen
+            </TabsTrigger>
+            <TabsTrigger value="access" className="gap-2">
+              <Users className="w-4 h-4" />
+              Zugriffsrechte
             </TabsTrigger>
           </TabsList>
 
