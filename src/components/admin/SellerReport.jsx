@@ -77,7 +77,18 @@ export default function SellerReport({ sales, commissionRate }) {
           <tbody>
             {sellerData.map((s, i) => (
               <tr key={s.sellerNumber} className={i % 2 === 0 ? "bg-card" : "bg-muted/20"}>
-                <td className="px-6 py-3 font-bold text-foreground">#{s.sellerNumber}</td>
+                <td className="px-6 py-3 font-bold text-foreground">
+                  <div className="flex items-center gap-2">
+                    <span>#{s.sellerNumber}</span>
+                    <button
+                      onClick={() => exportSellerCSV(s)}
+                      title="CSV exportieren"
+                      className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-primary"
+                    >
+                      <Download className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </td>
                 <td className="px-6 py-3 text-right text-muted-foreground">{s.items}</td>
                 <td className="px-6 py-3 text-right font-medium">{s.total.toFixed(2)} €</td>
                 <td className="px-6 py-3 text-right text-accent font-medium">
