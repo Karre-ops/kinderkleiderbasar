@@ -89,7 +89,7 @@ export default function Kasse() {
             <p className="text-xs text-muted-foreground">Kassierer-Ansicht</p>
           </div>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col items-end gap-2">
           <Select value={registerName} onValueChange={setRegisterName}>
             <SelectTrigger className="w-32 h-8 text-sm">
               <SelectValue />
