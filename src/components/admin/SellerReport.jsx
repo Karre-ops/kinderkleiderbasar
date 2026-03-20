@@ -56,9 +56,9 @@ export default function SellerReport({ sales, commissionRate }) {
     <div className="bg-card rounded-2xl border border-border overflow-hidden">
       <div className="flex items-center justify-between px-6 py-4 border-b border-border">
         <h3 className="font-semibold text-foreground">Verkäufer-Abrechnung</h3>
-        <Button variant="outline" size="sm" className="gap-2" onClick={exportCSV}>
+        <Button variant="outline" size="sm" className="gap-2" onClick={exportAllCSV}>
           <Download className="w-4 h-4" />
-          CSV Export
+          Gesamtübersicht exportieren
         </Button>
       </div>
       <div className="overflow-x-auto">
