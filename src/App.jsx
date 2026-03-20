@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 // Add page imports here
 import Kasse from "./pages/Kasse.jsx";
+import KassePublic from "./pages/KassePublic.jsx";
 import Admin from "./pages/Admin.jsx";
 import BazaarSelection from "./pages/BazaarSelection.jsx";
 
