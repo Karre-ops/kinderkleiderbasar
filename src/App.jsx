@@ -4,15 +4,18 @@ import { queryClientInstance } from '@/lib/query-client'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
+import { BazaarProvider, useBazaar } from '@/lib/BazaarContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 // Add page imports here
 import Kasse from "./pages/Kasse";
 import Admin from "./pages/Admin";
+import BazaarSelection from "./pages/BazaarSelection";
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
 
-  // Show loading spinner while checking app public settings or auth
   if (isLoadingPublicSettings || isLoadingAuth) {
     return (
       <div className="fixed inset-0 flex items-center justify-center">
@@ -21,20 +24,38 @@ const AuthenticatedApp = () => {
     );
   }
 
-  // Handle authentication errors
   if (authError) {
     if (authError.type === 'user_not_registered') {
       return <UserNotRegisteredError />;
     } else if (authError.type === 'auth_required') {
-      // Redirect to login automatically
       navigateToLogin();
       return null;
     }
   }
 
-  // Render the main app
+  return (
+    <BazaarProvider>
+      <AppRoutes />
+    </BazaarProvider>
+  );
+};
+
+const AppRoutes = () => {
+  const { selectedBazaar, selectedRole } = useBazaar();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  // Redirect to bazaar selection if no bazaar selected
+  useEffect(() => {
+    const path = window.location.pathname;
+    if (!selectedBazaar && path !== "/select") {
+      navigate("/select");
+    }
+  }, [selectedBazaar, navigate]);
+
   return (
     <Routes>
+      <Route path="/select" element={<BazaarSelection />} />
       <Route path="/" element={<Kasse />} />
       <Route path="/admin" element={<Admin />} />
       <Route path="*" element={<PageNotFound />} />
@@ -42,9 +63,7 @@ const AuthenticatedApp = () => {
   );
 };
 
-
 function App() {
-
   return (
     <AuthProvider>
       <QueryClientProvider client={queryClientInstance}>
