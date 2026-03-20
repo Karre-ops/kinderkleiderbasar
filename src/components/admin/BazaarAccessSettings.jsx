@@ -30,7 +30,13 @@ export default function BazaarAccessSettings({ bazaarId }) {
       return;
     }
     setAdding(true);
-    await base44.entities.BazaarAccess.create({ bazaar_id: bazaarId, user_email: email, role });
+    // A4: Use backend function to validate caller is admin before creating access
+    await base44.functions.invoke("adminBazaar", {
+      action: "addAccess",
+      bazaarId,
+      userEmail: email,
+      role,
+    });
     toast.success("Zugriff hinzugefügt");
     setEmail("");
     queryClient.invalidateQueries({ queryKey: ["bazaar-access", bazaarId] });
@@ -38,7 +44,12 @@ export default function BazaarAccessSettings({ bazaarId }) {
   };
 
   const handleDelete = async (id) => {
-    await base44.entities.BazaarAccess.delete(id);
+    // A4: Use backend function to validate caller is admin before deleting access
+    await base44.functions.invoke("adminBazaar", {
+      action: "removeAccess",
+      accessId: id,
+      bazaarId,
+    });
     toast.success("Zugriff entfernt");
     queryClient.invalidateQueries({ queryKey: ["bazaar-access", bazaarId] });
   };
