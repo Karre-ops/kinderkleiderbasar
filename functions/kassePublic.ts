@@ -89,6 +89,27 @@ Deno.serve(async (req) => {
       return Response.json({ transactionId });
     }
 
+    // Admin: get settings for a bazaar (requires authenticated user with admin access)
+    if (action === "getAdminSettings") {
+      const user = await base44.auth.me();
+      if (!user) return Response.json({ error: "Unauthorized" }, { status: 401 });
+      const isGlobalAdmin = user.role === "admin";
+      if (!isGlobalAdmin) {
+        const accessList = await base44.asServiceRole.entities.BazaarAccess.filter({
+          bazaar_id: bazaarId,
+          user_email: user.email,
+          role: "admin",
+        });
+        if (!accessList.length) return Response.json({ error: "Forbidden" }, { status: 403 });
+      }
+      const settings = await base44.asServiceRole.entities.Settings.filter({ bazaar_id: bazaarId });
+      // Never send kasse_password value to client
+      const safeSettings = settings.map((s) =>
+        s.key === "kasse_password" ? { ...s, value: "***" } : s
+      );
+      return Response.json({ settings: safeSettings });
+    }
+
     return Response.json({ error: "Unknown action" }, { status: 400 });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
