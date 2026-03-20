@@ -51,7 +51,9 @@ Deno.serve(async (req) => {
         if (typeof item.price !== "number" || item.price <= 0 || item.price > 10000) {
           return Response.json({ error: "Invalid item price" }, { status: 400 });
         }
-        if (!/^\d{1,3}$/.test(String(item.sellerNumber))) {
+        const snStr = String(item.sellerNumber);
+        // A6: Must be 1-3 digits, and not all zeros
+        if (!/^\d{1,3}$/.test(snStr) || parseInt(snStr, 10) === 0) {
           return Response.json({ error: "Invalid seller number" }, { status: 400 });
         }
       }
