@@ -15,16 +15,23 @@ export default function BazaarSelection() {
 
   const [bazaars, setBazaars] = useState([]);
   const [accessList, setAccessList] = useState([]);
+  const [bazaarSettings, setBazaarSettings] = useState({}); // bazaarId -> kasse_count
   const [loading, setLoading] = useState(true);
   const [selectedBazaarId, setSelectedBazaarId] = useState(null);
   const [showCreate, setShowCreate] = useState(false);
 
   const load = async () => {
     if (!user) return;
-    const [allBazaars, allAccess] = await Promise.all([
+    const [allBazaars, allAccess, allSettings] = await Promise.all([
       base44.entities.Bazaar.filter({ is_active: true }),
       base44.entities.BazaarAccess.filter({ user_email: user.email }),
+      base44.entities.Settings.filter({ key: "kasse_count" }),
     ]);
+    // Build map: bazaarId -> kasse_count value
+    const settingsMap = {};
+    allSettings.forEach((s) => { settingsMap[s.bazaar_id] = s.value; });
+    setBazaarSettings(settingsMap);
+
     if (user.role === "admin") {
       setBazaars(allBazaars);
       setAccessList(allBazaars.map((b) => ({ bazaar_id: b.id, role: "admin" })));
