@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Save, Percent } from "lucide-react";
 import { toast } from "sonner";
 
-export default function CommissionSettings({ settings, onUpdate }) {
+export default function CommissionSettings({ settings, bazaarId, onUpdate }) {
   const [rate, setRate] = useState("10");
   const [saving, setSaving] = useState(false);
 

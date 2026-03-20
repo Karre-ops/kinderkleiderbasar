@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Save, Lock, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 
-export default function KassePasswordSettings({ settings, onUpdate }) {
+export default function KassePasswordSettings({ settings, bazaarId, onUpdate }) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
