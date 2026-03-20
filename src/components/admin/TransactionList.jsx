@@ -15,7 +15,8 @@ export default function TransactionList({ sales }) {
     return Object.values(map).sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt));
   }, [sales]);
 
-  const num = (n) => n.toFixed(2).replace(".", ",");
+  const num = (n) => `"${n.toFixed(2).replace(".", ",")}"`;
+
 
   const exportCSV = () => {
     const header = "Transaktions-ID;Kasse;Kassierer;Zeitpunkt;Verkäufer;Preis (€);Kindergarten (€)";
