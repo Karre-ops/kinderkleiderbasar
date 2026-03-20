@@ -1,29 +1,34 @@
 import { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/lib/AuthContext";
+import { useBazaar } from "@/lib/BazaarContext";
 import AdminStats from "@/components/admin/AdminStats";
 import SellerReport from "@/components/admin/SellerReport";
 import TransactionList from "@/components/admin/TransactionList";
 import CommissionSettings from "@/components/admin/CommissionSettings";
 import KassePasswordSettings from "@/components/admin/KassePasswordSettings";
+import BazaarAccessSettings from "@/components/admin/BazaarAccessSettings";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { BarChart3, List, Settings, ShoppingCart, LogOut } from "lucide-react";
-import { useAuth } from "@/lib/AuthContext";
-
+import { BarChart3, List, Settings, ShoppingCart, LogOut, ArrowLeft, Users } from "lucide-react";
 
 export default function Admin() {
   const { user } = useAuth();
+  const { selectedBazaar, selectedRole, clearBazaar } = useBazaar();
+  const navigate = useNavigate();
 
   const { data: sales = [] } = useQuery({
-    queryKey: ["sales"],
-    queryFn: () => base44.entities.Sale.list("-transaction_completed_at", 1000),
+    queryKey: ["sales", selectedBazaar?.id],
+    queryFn: () => base44.entities.Sale.filter({ bazaar_id: selectedBazaar?.id }, "-transaction_completed_at", 1000),
+    enabled: !!selectedBazaar,
   });
 
   const { data: settings = [], refetch: refetchSettings } = useQuery({
-    queryKey: ["settings"],
-    queryFn: () => base44.entities.Settings.list(),
+    queryKey: ["settings", selectedBazaar?.id],
+    queryFn: () => base44.entities.Settings.filter({ bazaar_id: selectedBazaar?.id }),
+    enabled: !!selectedBazaar,
   });
 
   const commissionRate = parseFloat(
@@ -35,18 +40,9 @@ export default function Admin() {
     return null;
   }
 
-  if (user.role !== "admin") {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold text-foreground mb-2">Kein Zugriff</h2>
-          <p className="text-muted-foreground mb-4">Nur Admins können diese Seite sehen.</p>
-          <Link to="/">
-            <Button>Zur Kasse</Button>
-          </Link>
-        </div>
-      </div>
-    );
+  if (!selectedBazaar || selectedRole !== "admin") {
+    navigate("/select");
+    return null;
   }
 
   return (
@@ -58,16 +54,19 @@ export default function Admin() {
           </div>
           <div>
             <h1 className="text-lg font-semibold text-foreground">Admin-Bereich</h1>
-            <p className="text-xs text-muted-foreground">KindermarktKasse</p>
+            <p className="text-xs text-muted-foreground">{selectedBazaar.name}</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <Link to="/">
-            <Button variant="outline" size="sm" className="gap-2">
-              <ShoppingCart className="w-4 h-4" />
-              Zur Kasse
-            </Button>
-          </Link>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => { clearBazaar(); navigate("/select"); }}
+            className="gap-2 text-muted-foreground"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Basar wechseln
+          </Button>
           <Button
             variant="outline"
             size="sm"
@@ -93,6 +92,10 @@ export default function Admin() {
               <List className="w-4 h-4" />
               Transaktionen
             </TabsTrigger>
+            <TabsTrigger value="access" className="gap-2">
+              <Users className="w-4 h-4" />
+              Zugriffsrechte
+            </TabsTrigger>
             <TabsTrigger value="settings" className="gap-2">
               <Settings className="w-4 h-4" />
               Einstellungen
@@ -107,14 +110,20 @@ export default function Admin() {
             <TransactionList sales={sales} />
           </TabsContent>
 
+          <TabsContent value="access" className="mt-6">
+            <BazaarAccessSettings bazaarId={selectedBazaar.id} />
+          </TabsContent>
+
           <TabsContent value="settings" className="mt-6">
             <div className="space-y-6">
               <CommissionSettings
                 settings={settings}
+                bazaarId={selectedBazaar.id}
                 onUpdate={refetchSettings}
               />
               <KassePasswordSettings
                 settings={settings}
+                bazaarId={selectedBazaar.id}
                 onUpdate={refetchSettings}
               />
             </div>
