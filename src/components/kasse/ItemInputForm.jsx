@@ -41,11 +41,18 @@ export default function ItemInputForm({ onAddItem }) {
   };
 
   const handlePriceChange = (e) => {
-    let val = e.target.value.replace(/[^0-9.,]/g, "").replace(",", ".");
-    // Allow only one decimal point
-    const parts = val.split(".");
-    if (parts.length > 2) val = parts[0] + "." + parts.slice(1).join("");
-    setPrice(val);
+    // Only allow digits
+    const digits = e.target.value.replace(/\D/g, "");
+    if (digits === "") {
+      setPrice("");
+      return;
+    }
+    // Interpret digits as cents: last 2 digits = cents, rest = euros
+    const cents = parseInt(digits, 10);
+    const euros = Math.floor(cents / 100);
+    const centPart = cents % 100;
+    const formatted = `${euros},${String(centPart).padStart(2, "0")}`;
+    setPrice(formatted);
   };
 
   const handleAdd = () => {
