@@ -132,6 +132,7 @@ export default function KassePublic() {
           items={items}
           total={total}
           commissionRate={commissionRate}
+          maxItemPrice={maxItemPrice}
           onConfirm={handleConfirmCheckout}
           onCancel={() => setShowCheckout(false)}
           isSubmitting={isSubmitting}
