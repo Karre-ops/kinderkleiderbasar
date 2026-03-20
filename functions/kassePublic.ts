@@ -7,10 +7,18 @@ Deno.serve(async (req) => {
     const { action, bazaarId, kasseNummer, items, cashierName, password } = body;
 
     if (action === "loadBazaar") {
-      const [bazaars, settings] = await Promise.all([
-        base44.asServiceRole.entities.Bazaar.filter({ id: bazaarId }),
-        base44.asServiceRole.entities.Settings.filter({ bazaar_id: bazaarId }),
-      ]);
+      if (!bazaarId || typeof bazaarId !== "string" || bazaarId.length < 3) {
+        return Response.json({ bazaars: [], hasPassword: false, commissionRate: 10 });
+      }
+      let bazaars = [], settings = [];
+      try {
+        [bazaars, settings] = await Promise.all([
+          base44.asServiceRole.entities.Bazaar.filter({ id: bazaarId }),
+          base44.asServiceRole.entities.Settings.filter({ bazaar_id: bazaarId }),
+        ]);
+      } catch (_) {
+        return Response.json({ bazaars: [], hasPassword: false, commissionRate: 10 });
+      }
 
       // K1: Never send the password to the client – only send a flag
       const hasPassword = settings.some((s) => s.key === "kasse_password");
