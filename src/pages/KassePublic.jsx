@@ -27,10 +27,8 @@ export default function KassePublic() {
   useEffect(() => {
     if (!bazaarId) { setNotFound(true); setLoading(false); return; }
     const load = async () => {
-      const [bazaars, settingsList] = await Promise.all([
-        base44.entities.Bazaar.filter({ id: bazaarId }),
-        base44.entities.Settings.filter({ bazaar_id: bazaarId }),
-      ]);
+      const res = await base44.functions.invoke("kassePublic", { action: "loadBazaar", bazaarId });
+      const { bazaars, settings: settingsList } = res.data;
       if (!bazaars.length || !bazaars[0].is_active) { setNotFound(true); }
       else { setBazaar(bazaars[0]); setSettings(settingsList); }
       setLoading(false);
