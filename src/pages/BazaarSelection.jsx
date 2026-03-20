@@ -51,8 +51,7 @@ export default function BazaarSelection() {
 
   const handleSelect = (bazaar, role) => {
     selectBazaar({ id: bazaar.id, name: bazaar.name }, role);
-    if (role === "admin") navigate("/admin");
-    else navigate("/kasse-intern");
+    navigate("/admin");
   };
 
   const handleCopyLink = (bazaar, kasseNummer) => {
@@ -154,15 +153,6 @@ export default function BazaarSelection() {
                     {isSelected && (
                       <div className="border-t border-border px-6 py-4 bg-muted/20 space-y-3">
                         <div className="flex flex-col sm:flex-row gap-3">
-                          {roles.includes("cashier") && (
-                            <Button
-                              className="flex-1 h-14 text-base gap-2 bg-primary hover:bg-primary/90"
-                              onClick={() => handleSelect(bazaar, "cashier")}
-                            >
-                              <ShoppingCart className="w-5 h-5" />
-                              Als Kasse anmelden
-                            </Button>
-                          )}
                           {roles.includes("admin") && (
                             <Button
                               className="flex-1 h-14 text-base gap-2 bg-accent hover:bg-accent/90 text-accent-foreground"

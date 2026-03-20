@@ -12,7 +12,6 @@ import { useEffect } from 'react';
 import KassePublic from "./pages/KassePublic.jsx";
 import Admin from "./pages/Admin.jsx";
 import BazaarSelection from "./pages/BazaarSelection.jsx";
-import Kasse from "./pages/Kasse.jsx";
 
 // Public routes that don't require auth
 const PUBLIC_PATHS = ["/kasse"];
@@ -66,7 +65,6 @@ const AppRoutes = () => {
     <Routes>
       <Route path="/select" element={<BazaarSelection />} />
       <Route path="/" element={<BazaarSelection />} />
-      <Route path="/kasse-intern" element={<Kasse />} />
       <Route path="/admin" element={<Admin />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
