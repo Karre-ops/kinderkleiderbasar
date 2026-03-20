@@ -19,9 +19,9 @@ const PUBLIC_PATHS = ["/kasse"];
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
   const location = useLocation();
-  const isPublic = PUBLIC_PATHS.includes(location.pathname);
+  const isPublic = PUBLIC_PATHS.some(p => location.pathname.startsWith(p));
 
-  // Public routes: render directly without auth
+  // Public routes: render directly without any auth check
   if (isPublic) {
     return <KassePublic />;
   }
