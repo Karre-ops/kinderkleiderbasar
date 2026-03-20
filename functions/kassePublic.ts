@@ -18,23 +18,22 @@ Deno.serve(async (req) => {
       const transactionId = `TXN-${Date.now()}`;
       const now = new Date().toISOString();
 
-      await Promise.all(
-        items.map((item) => {
-          const commissionAmount = (item.price * commissionRate) / 100;
-          return base44.asServiceRole.entities.Sale.create({
-            bazaar_id: bazaarId,
-            transaction_id: transactionId,
-            cash_register: kasseNummer,
-            seller_number: item.sellerNumber,
-            price: item.price,
-            commission_rate: commissionRate,
-            commission_amount: commissionAmount,
-            seller_payout: item.price - commissionAmount,
-            transaction_completed_at: now,
-            cashier_name: cashierName,
-          });
-        })
-      );
+      const saleRecords = items.map((item) => {
+        const commissionAmount = (item.price * commissionRate) / 100;
+        return {
+          bazaar_id: bazaarId,
+          transaction_id: transactionId,
+          cash_register: kasseNummer,
+          seller_number: item.sellerNumber,
+          price: item.price,
+          commission_rate: commissionRate,
+          commission_amount: commissionAmount,
+          seller_payout: item.price - commissionAmount,
+          transaction_completed_at: now,
+          cashier_name: cashierName,
+        };
+      });
+      await base44.asServiceRole.entities.Sale.bulkCreate(saleRecords);
 
       return Response.json({ transactionId });
     }
