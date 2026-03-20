@@ -15,6 +15,7 @@ export default function KassePublic() {
 
   const [bazaar, setBazaar] = useState(null);
   const [commissionRate, setCommissionRate] = useState(10);
+  const [maxItemPrice, setMaxItemPrice] = useState(300);
   const [hasPassword, setHasPassword] = useState(false);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
