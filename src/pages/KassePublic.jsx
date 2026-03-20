@@ -88,8 +88,13 @@ export default function KassePublic() {
     );
   }
 
-  if (kassePassword && !unlocked) {
-    return <PasswordGate correctPassword={kassePassword} onUnlock={() => setUnlocked(true)} />;
+  if (hasPassword && !unlocked) {
+    return (
+      <PasswordGate
+        bazaarId={bazaarId}
+        onUnlock={(pw) => { sessionPassword.current = pw; setUnlocked(true); }}
+      />
+    );
   }
 
   return (
