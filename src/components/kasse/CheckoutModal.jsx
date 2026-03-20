@@ -1,8 +1,12 @@
+import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { CheckCircle2, Loader2 } from "lucide-react";
 
 export default function CheckoutModal({ items, total, commissionRate, onConfirm, onCancel, isSubmitting }) {
+  const [cashierName, setCashierName] = useState("");
   const commissionTotal = (total * commissionRate) / 100;
 
   return (
@@ -29,13 +33,25 @@ export default function CheckoutModal({ items, total, commissionRate, onConfirm,
             </div>
           </div>
 
+          {/* Cashier Name */}
+          <div className="space-y-2">
+            <Label htmlFor="cashier-name">Kassierer (optional)</Label>
+            <Input
+              id="cashier-name"
+              placeholder="Name des Kassierers"
+              value={cashierName}
+              onChange={(e) => setCashierName(e.target.value)}
+              disabled={isSubmitting}
+            />
+          </div>
+
           {/* Actions */}
           <div className="flex gap-3 pt-2">
             <Button variant="outline" onClick={onCancel} className="flex-1" disabled={isSubmitting}>
               Abbrechen
             </Button>
             <Button
-              onClick={() => onConfirm("Unbekannt")}
+              onClick={() => onConfirm(cashierName || "Unbekannt")}
               className="flex-1 gap-2 bg-accent hover:bg-accent/90 text-accent-foreground"
               disabled={isSubmitting}
             >

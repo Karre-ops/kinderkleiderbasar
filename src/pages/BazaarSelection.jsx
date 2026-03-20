@@ -178,7 +178,7 @@ export default function BazaarSelection() {
                           <div className="space-y-2">
                             <p className="text-xs text-muted-foreground font-medium">Kassen-Links kopieren:</p>
                             <div className="grid grid-cols-2 gap-2">
-                              {Array.from({ length: parseInt(bazaarSettings[bazaar.id] ?? "4") }, (_, i) => i + 1).map((nr) => (
+                              {Array.from({ length: Math.max(1, parseInt(bazaarSettings[bazaar.id] ?? "4") || 4) }, (_, i) => i + 1).map((nr) => (
                                 <Button
                                   key={nr}
                                   variant="outline"
