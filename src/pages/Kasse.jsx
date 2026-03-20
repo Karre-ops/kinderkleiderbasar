@@ -5,6 +5,7 @@ import ItemInputForm from "@/components/kasse/ItemInputForm";
 import CurrentBill from "@/components/kasse/CurrentBill";
 import CheckoutModal from "@/components/kasse/CheckoutModal";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ShoppingCart, LogOut } from "lucide-react";
 import { toast } from "sonner";
 
@@ -12,6 +13,7 @@ export default function Kasse() {
   const [items, setItems] = useState([]);
   const [showCheckout, setShowCheckout] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [registerName, setRegisterName] = useState("Kasse 1");
 
   const { data: settingsData } = useQuery({
     queryKey: ["settings"],
@@ -39,7 +41,7 @@ export default function Kasse() {
     setShowCheckout(true);
   };
 
-  const confirmCheckout = async (cashierName, registerName) => {
+  const confirmCheckout = async (cashierName) => {
     setIsSubmitting(true);
     const transactionId = `TXN-${Date.now()}`;
     const completedAt = new Date().toISOString();
@@ -88,6 +90,17 @@ export default function Kasse() {
           </div>
         </div>
         <div className="flex items-center gap-4">
+          <Select value={registerName} onValueChange={setRegisterName}>
+            <SelectTrigger className="w-32 h-8 text-sm">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Kasse 1">Kasse 1</SelectItem>
+              <SelectItem value="Kasse 2">Kasse 2</SelectItem>
+              <SelectItem value="Kasse 3">Kasse 3</SelectItem>
+              <SelectItem value="Kasse 4">Kasse 4</SelectItem>
+            </SelectContent>
+          </Select>
           <span className="text-sm text-muted-foreground">
             Provision: <span className="font-medium text-foreground">{commissionRate}%</span>
           </span>
