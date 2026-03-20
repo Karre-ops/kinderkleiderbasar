@@ -61,29 +61,23 @@ export default function Kasse() {
 
   const handleConfirmCheckout = async (cashierName) => {
     setIsSubmitting(true);
-    const transactionId = `TXN-${Date.now()}`;
-    const now = new Date().toISOString();
-
-    const saleRecords = items.map((item) => {
-      const commissionAmount = (item.price * commissionRate) / 100;
-      return {
-        bazaar_id: selectedBazaar.id,
-        transaction_id: transactionId,
-        seller_number: item.sellerNumber,
-        price: item.price,
-        commission_rate: commissionRate,
-        commission_amount: commissionAmount,
-        seller_payout: item.price - commissionAmount,
-        transaction_completed_at: now,
-        cashier_name: cashierName,
-      };
-    });
-    await base44.entities.Sale.bulkCreate(saleRecords);
-
-    toast.success(`Transaktion ${transactionId} abgeschlossen!`);
-    setItems([]);
-    setShowCheckout(false);
-    setIsSubmitting(false);
+    try {
+      const res = await base44.functions.invoke("kassePublic", {
+        action: "checkout",
+        bazaarId: selectedBazaar.id,
+        kasseNummer: "intern",
+        items,
+        cashierName,
+        commissionRate,
+      });
+      toast.success(`Transaktion ${res.data.transactionId} abgeschlossen!`);
+      setItems([]);
+      setShowCheckout(false);
+    } catch (err) {
+      toast.error("Fehler beim Abschluss der Transaktion. Bitte erneut versuchen.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

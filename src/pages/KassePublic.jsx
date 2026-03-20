@@ -49,18 +49,23 @@ export default function KassePublic() {
 
   const handleConfirmCheckout = async (cashierName) => {
     setIsSubmitting(true);
-    const res = await base44.functions.invoke("kassePublic", {
-      action: "checkout",
-      bazaarId,
-      kasseNummer,
-      items,
-      cashierName,
-      commissionRate,
-    });
-    toast.success(`Transaktion ${res.data.transactionId} abgeschlossen!`);
-    setItems([]);
-    setShowCheckout(false);
-    setIsSubmitting(false);
+    try {
+      const res = await base44.functions.invoke("kassePublic", {
+        action: "checkout",
+        bazaarId,
+        kasseNummer,
+        items,
+        cashierName,
+        commissionRate,
+      });
+      toast.success(`Transaktion ${res.data.transactionId} abgeschlossen!`);
+      setItems([]);
+      setShowCheckout(false);
+    } catch (err) {
+      toast.error("Fehler beim Abschluss der Transaktion. Bitte erneut versuchen.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (loading) {
