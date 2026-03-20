@@ -9,9 +9,9 @@ import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 // Add page imports here
-import Kasse from "./pages/Kasse";
-import Admin from "./pages/Admin";
-import BazaarSelection from "./pages/BazaarSelection";
+import Kasse from "./pages/Kasse.jsx";
+import Admin from "./pages/Admin.jsx";
+import BazaarSelection from "./pages/BazaarSelection.jsx";
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
