@@ -51,9 +51,14 @@ export default function Kasse() {
     return null;
   }
 
-  // Password gate
-  if (kassePassword && !unlocked) {
-    return <PasswordGate correctPassword={kassePassword} onUnlock={() => setUnlocked(true)} />;
+  // Password gate – K3: Server-side verification
+  if (hasPassword && !unlocked) {
+    return (
+      <PasswordGate
+        bazaarId={selectedBazaar?.id}
+        onUnlock={(pw) => { sessionPasswordRef.current = pw; setUnlocked(true); }}
+      />
+    );
   }
 
   const total = items.reduce((sum, i) => sum + i.price, 0);
