@@ -87,7 +87,7 @@ export default function Admin() {
       <div className="p-6 max-w-7xl mx-auto">
         <AdminStats sales={sales} commissionRate={commissionRate} />
 
-        <Tabs defaultValue="sellers" className="mt-8">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-8">
           <TabsList className="bg-card border border-border">
             <TabsTrigger value="sellers" className="gap-2">
               <BarChart3 className="w-4 h-4" />
@@ -97,14 +97,39 @@ export default function Admin() {
               <List className="w-4 h-4" />
               Transaktionen
             </TabsTrigger>
-            <TabsTrigger value="settings" className="gap-2">
+            {/* Desktop: show tabs directly */}
+            <TabsTrigger value="settings" className="gap-2 hidden sm:flex">
               <Settings className="w-4 h-4" />
               Einstellungen
             </TabsTrigger>
-            <TabsTrigger value="access" className="gap-2">
+            <TabsTrigger value="access" className="gap-2 hidden sm:flex">
               <Users className="w-4 h-4" />
               Zugriffsrechte
             </TabsTrigger>
+            {/* Mobile: show "Mehr" dropdown */}
+            <div className="sm:hidden">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-sm transition-colors
+                    ${["settings", "access"].includes(activeTab)
+                      ? "bg-background text-foreground shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"}`}>
+                    <MoreHorizontal className="w-4 h-4" />
+                    Mehr
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => setActiveTab("settings")} className="gap-2">
+                    <Settings className="w-4 h-4" />
+                    Einstellungen
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setActiveTab("access")} className="gap-2">
+                    <Users className="w-4 h-4" />
+                    Zugriffsrechte
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </TabsList>
 
           <TabsContent value="sellers" className="mt-6">
