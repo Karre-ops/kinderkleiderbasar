@@ -15,9 +15,11 @@ export default function KassePublic() {
 
   const [bazaar, setBazaar] = useState(null);
   const [settings, setSettings] = useState([]);
+  const [hasPassword, setHasPassword] = useState(false);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [unlocked, setUnlocked] = useState(false);
+  const sessionPassword = useRef(null); // K1: store verified password for checkout
 
   const [items, setItems] = useState([]);
   const [showCheckout, setShowCheckout] = useState(false);
@@ -27,9 +29,9 @@ export default function KassePublic() {
     if (!bazaarId) { setNotFound(true); setLoading(false); return; }
     const load = async () => {
       const res = await base44.functions.invoke("kassePublic", { action: "loadBazaar", bazaarId });
-      const { bazaars, settings: settingsList } = res.data;
+      const { bazaars, settings: settingsList, hasPassword: hp } = res.data;
       if (!bazaars.length || !bazaars[0].is_active) { setNotFound(true); }
-      else { setBazaar(bazaars[0]); setSettings(settingsList); }
+      else { setBazaar(bazaars[0]); setSettings(settingsList); setHasPassword(!!hp); }
       setLoading(false);
     };
     load();
