@@ -7,11 +7,10 @@ import { CheckCircle2, Loader2 } from "lucide-react";
 
 export default function CheckoutModal({ items, total, commissionRate, onConfirm, onCancel, isSubmitting }) {
   const [cashierName, setCashierName] = useState("");
-  const [registerName, setRegisterName] = useState("Kasse 1");
   const commissionTotal = (total * commissionRate) / 100;
 
   const handleConfirm = () => {
-    onConfirm(cashierName || "Unbekannt", registerName || "Kasse 1");
+    onConfirm(cashierName || "Unbekannt");
   };
 
   return (
@@ -46,17 +45,6 @@ export default function CheckoutModal({ items, total, commissionRate, onConfirm,
               value={cashierName}
               onChange={(e) => setCashierName(e.target.value)}
               placeholder="Name des Kassierers"
-            />
-          </div>
-
-          {/* Register Name */}
-          <div className="space-y-2">
-            <Label htmlFor="register">Kassenbezeichnung</Label>
-            <Input
-              id="register"
-              value={registerName}
-              onChange={(e) => setRegisterName(e.target.value)}
-              placeholder="z.B. Kasse 1"
             />
           </div>
 
