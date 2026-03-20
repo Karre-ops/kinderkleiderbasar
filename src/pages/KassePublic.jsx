@@ -50,26 +50,15 @@ export default function KassePublic() {
 
   const handleConfirmCheckout = async (cashierName) => {
     setIsSubmitting(true);
-    const transactionId = `TXN-${Date.now()}`;
-    const now = new Date().toISOString();
-    await Promise.all(
-      items.map((item) => {
-        const commissionAmount = (item.price * commissionRate) / 100;
-        return base44.entities.Sale.create({
-          bazaar_id: bazaarId,
-          transaction_id: transactionId,
-          cash_register: kasseNummer,
-          seller_number: item.sellerNumber,
-          price: item.price,
-          commission_rate: commissionRate,
-          commission_amount: commissionAmount,
-          seller_payout: item.price - commissionAmount,
-          transaction_completed_at: now,
-          cashier_name: cashierName,
-        });
-      })
-    );
-    toast.success(`Transaktion ${transactionId} abgeschlossen!`);
+    const res = await base44.functions.invoke("kassePublic", {
+      action: "checkout",
+      bazaarId,
+      kasseNummer,
+      items,
+      cashierName,
+      commissionRate,
+    });
+    toast.success(`Transaktion ${res.data.transactionId} abgeschlossen!`);
     setItems([]);
     setShowCheckout(false);
     setIsSubmitting(false);
