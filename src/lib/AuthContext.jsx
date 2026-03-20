@@ -14,6 +14,13 @@ export const AuthProvider = ({ children }) => {
   const [appPublicSettings, setAppPublicSettings] = useState(null); // Contains only { id, public_settings }
 
   useEffect(() => {
+    const PUBLIC_PATHS = ["/kasse"];
+    const isPublic = PUBLIC_PATHS.some(p => window.location.pathname.startsWith(p));
+    if (isPublic) {
+      setIsLoadingAuth(false);
+      setIsLoadingPublicSettings(false);
+      return;
+    }
     checkAppState();
   }, []);
 
