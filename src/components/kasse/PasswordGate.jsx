@@ -1,17 +1,27 @@
 import { useState } from "react";
+import { base44 } from "@/api/base44Client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Lock, ShoppingCart } from "lucide-react";
+import { Lock, ShoppingCart, Loader2 } from "lucide-react";
 
-export default function PasswordGate({ correctPassword, onUnlock }) {
+export default function PasswordGate({ bazaarId, onUnlock }) {
   const [input, setInput] = useState("");
   const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (input === correctPassword) {
-      onUnlock();
+    setLoading(true);
+    setError(false);
+    const res = await base44.functions.invoke("kassePublic", {
+      action: "verifyPassword",
+      bazaarId,
+      password: input,
+    });
+    setLoading(false);
+    if (res.data?.ok) {
+      onUnlock(input); // pass verified password back
     } else {
       setError(true);
       setInput("");
@@ -43,13 +53,15 @@ export default function PasswordGate({ correctPassword, onUnlock }) {
               onChange={(e) => setInput(e.target.value)}
               placeholder="••••••••"
               autoFocus
+              disabled={loading}
               className={error ? "border-destructive focus:border-destructive" : ""}
             />
             {error && (
               <p className="text-xs text-destructive">Falsches Passwort. Bitte erneut versuchen.</p>
             )}
           </div>
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full gap-2" disabled={loading || !input}>
+            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
             Zugang
           </Button>
         </form>
