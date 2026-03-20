@@ -34,6 +34,27 @@ export default function CheckoutModal({ items, total, commissionRate, maxItemPri
             </div>
           </div>
 
+          {/* High price warning */}
+          {highPriceItems.length > 0 && (
+            <div className="flex items-start gap-3 bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+              <AlertTriangle className="w-5 h-5 text-yellow-600 shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-semibold text-yellow-800">Ungewöhnlich hoher Preis</p>
+                <p className="text-xs text-yellow-700 mt-1">
+                  {highPriceItems.length === 1
+                    ? `1 Artikel überschreitet den Grenzwert von ${maxItemPrice.toFixed(2)} €:`
+                    : `${highPriceItems.length} Artikel überschreiten den Grenzwert von ${maxItemPrice.toFixed(2)} €:`}
+                </p>
+                <ul className="text-xs text-yellow-700 mt-1 space-y-0.5">
+                  {highPriceItems.map((i) => (
+                    <li key={i.id}>Verkäufer {i.sellerNumber}: {i.price.toFixed(2)} €</li>
+                  ))}
+                </ul>
+                <p className="text-xs text-yellow-700 mt-2">Bitte Preis prüfen, bevor Sie bestätigen.</p>
+              </div>
+            </div>
+          )}
+
           {/* Cashier Name */}
           <div className="space-y-2">
             <Label htmlFor="cashier-name">Kassierer (optional)</Label>
