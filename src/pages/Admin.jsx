@@ -15,7 +15,7 @@ import { useAuth } from "@/lib/AuthContext";
 export default function Admin() {
   const { user } = useAuth();
 
-  const { data: sales = [], refetch } = useQuery({
+  const { data: sales = [] } = useQuery({
     queryKey: ["sales"],
     queryFn: () => base44.entities.Sale.list("-transaction_completed_at", 1000),
   });

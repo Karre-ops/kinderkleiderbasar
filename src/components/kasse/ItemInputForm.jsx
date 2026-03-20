@@ -41,7 +41,10 @@ export default function ItemInputForm({ onAddItem }) {
   };
 
   const handlePriceChange = (e) => {
-    const val = e.target.value.replace(/[^0-9.,]/g, "").replace(",", ".");
+    let val = e.target.value.replace(/[^0-9.,]/g, "").replace(",", ".");
+    // Allow only one decimal point
+    const parts = val.split(".");
+    if (parts.length > 2) val = parts[0] + "." + parts.slice(1).join("");
     setPrice(val);
   };
 

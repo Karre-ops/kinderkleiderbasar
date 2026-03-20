@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import ItemInputForm from "@/components/kasse/ItemInputForm";
@@ -65,7 +65,8 @@ export default function Kasse() {
       setItems([]);
       setShowCheckout(false);
     } catch (e) {
-      toast.error("Fehler beim Speichern");
+      toast.error("Fehler beim Speichern: " + e.message);
+      setShowCheckout(false);
     } finally {
       setIsSubmitting(false);
     }
