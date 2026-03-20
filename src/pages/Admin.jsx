@@ -8,6 +8,7 @@ import SellerReport from "@/components/admin/SellerReport";
 import TransactionList from "@/components/admin/TransactionList";
 import CommissionSettings from "@/components/admin/CommissionSettings";
 import KassePasswordSettings from "@/components/admin/KassePasswordSettings";
+import KasseCountSettings from "@/components/admin/KasseCountSettings";
 import BazaarAccessSettings from "@/components/admin/BazaarAccessSettings.jsx";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
