@@ -14,9 +14,10 @@ Deno.serve(async (req) => {
 
       // K1: Never send the password to the client – only send a flag
       const hasPassword = settings.some((s) => s.key === "kasse_password");
-      const safeSettings = settings.filter((s) => s.key !== "kasse_password");
+      // A1: Send commissionRate from server so client never needs to read settings directly
+      const commissionRate = parseFloat(settings.find((s) => s.key === "commission_rate")?.value ?? "10");
 
-      return Response.json({ bazaars, settings: safeSettings, hasPassword });
+      return Response.json({ bazaars, hasPassword, commissionRate });
     }
 
     if (action === "verifyPassword") {
