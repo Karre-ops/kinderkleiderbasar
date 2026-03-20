@@ -29,9 +29,9 @@ export default function KassePublic() {
     if (!bazaarId) { setNotFound(true); setLoading(false); return; }
     const load = async () => {
       const res = await base44.functions.invoke("kassePublic", { action: "loadBazaar", bazaarId });
-      const { bazaars, settings: settingsList, hasPassword: hp } = res.data;
+      const { bazaars, settings: settingsList, hasPassword: hp, commissionRate: cr } = res.data;
       if (!bazaars.length || !bazaars[0].is_active) { setNotFound(true); }
-      else { setBazaar(bazaars[0]); setSettings(settingsList); setHasPassword(!!hp); }
+      else { setBazaar(bazaars[0]); setCommissionRate(cr ?? 10); setHasPassword(!!hp); }
       setLoading(false);
     };
     load();
