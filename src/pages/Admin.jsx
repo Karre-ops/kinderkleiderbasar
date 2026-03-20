@@ -23,7 +23,7 @@ export default function Admin() {
 
   const { data: sales = [] } = useQuery({
     queryKey: ["sales", selectedBazaar?.id],
-    queryFn: () => base44.entities.Sale.filter({ bazaar_id: selectedBazaar?.id }, "-transaction_completed_at", 1000),
+    queryFn: () => base44.entities.Sale.filter({ bazaar_id: selectedBazaar?.id }, "-transaction_completed_at", 10000),
     enabled: !!selectedBazaar,
   });
 
