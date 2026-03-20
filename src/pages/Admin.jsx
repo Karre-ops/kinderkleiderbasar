@@ -108,10 +108,16 @@ export default function Admin() {
           </TabsContent>
 
           <TabsContent value="settings" className="mt-6">
-            <CommissionSettings
-              settings={settings}
-              onUpdate={refetchSettings}
-            />
+            <div className="space-y-6">
+              <CommissionSettings
+                settings={settings}
+                onUpdate={refetchSettings}
+              />
+              <KassePasswordSettings
+                settings={settings}
+                onUpdate={refetchSettings}
+              />
+            </div>
           </TabsContent>
         </Tabs>
       </div>

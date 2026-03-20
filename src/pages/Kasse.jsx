@@ -11,6 +11,7 @@ import { ShoppingCart, LogOut } from "lucide-react";
 import { toast } from "sonner";
 
 export default function Kasse() {
+  const [unlocked, setUnlocked] = useState(false);
   const [items, setItems] = useState([]);
   const [showCheckout, setShowCheckout] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
