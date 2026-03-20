@@ -90,6 +90,17 @@ Deno.serve(async (req) => {
       return Response.json({ transactionId });
     }
 
+    if (action === "loadKasseSettings") {
+      // K3: Load settings for internal kasse – server-side verified
+      const user = await base44.auth.me();
+      if (!user) return Response.json({ error: "Unauthorized" }, { status: 401 });
+      const settings = await base44.asServiceRole.entities.Settings.filter({ bazaar_id: bazaarId });
+      const commissionRate = parseFloat(settings.find((s) => s.key === "commission_rate")?.value ?? "10");
+      const maxItemPrice = parseFloat(settings.find((s) => s.key === "max_item_price")?.value ?? "300");
+      const hasPassword = settings.some((s) => s.key === "kasse_password");
+      return Response.json({ commissionRate, maxItemPrice, hasPassword });
+    }
+
     // Admin: get settings for a bazaar (requires authenticated user with admin access)
     if (action === "getAdminSettings") {
       const user = await base44.auth.me();
