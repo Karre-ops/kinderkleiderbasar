@@ -153,6 +153,11 @@ export default function Admin() {
                 bazaarId={selectedBazaar.id}
                 onUpdate={refetchSettings}
               />
+              <KasseCountSettings
+                settings={settings}
+                bazaarId={selectedBazaar.id}
+                onUpdate={refetchSettings}
+              />
             </div>
           </TabsContent>
 
