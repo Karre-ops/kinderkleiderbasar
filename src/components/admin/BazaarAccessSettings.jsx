@@ -20,7 +20,8 @@ export default function BazaarAccessSettings({ bazaarId }) {
   });
 
   const handleAdd = async () => {
-    if (!email || !email.includes("@")) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email)) {
       toast.error("Bitte eine gültige E-Mail-Adresse eingeben");
       return;
     }

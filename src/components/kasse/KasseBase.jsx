@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import ItemInputForm from "@/components/kasse/ItemInputForm.jsx";
 import CurrentBill from "@/components/kasse/CurrentBill.jsx";
@@ -26,23 +26,19 @@ export default function KasseBase({
   const [settings, setSettings] = useState(null);
   const [settingsError, setSettingsError] = useState(false);
 
-  const loadSettingsData = async () => {
-    try {
-      const result = await loadSettings();
-      setSettings(result);
-    } catch (err) {
-      console.error("Error loading settings:", err);
-      setSettingsError(true);
-      setSettings({ commissionRate: 10, maxItemPrice: 300, hasPassword: false });
-    }
-  };
-
-  // Load settings on mount
-  const [settingsLoaded, setSettingsLoaded] = useState(false);
-  if (!settingsLoaded) {
+  useEffect(() => {
+    const loadSettingsData = async () => {
+      try {
+        const result = await loadSettings();
+        setSettings(result);
+      } catch (err) {
+        console.error("Error loading settings:", err);
+        setSettingsError(true);
+        setSettings({ commissionRate: 10, maxItemPrice: 300, hasPassword: false });
+      }
+    };
     loadSettingsData();
-    setSettingsLoaded(true);
-  }
+  }, [loadSettings]);
 
   const commissionRate = settings?.commissionRate ?? 10;
   const maxItemPrice = settings?.maxItemPrice ?? 300;

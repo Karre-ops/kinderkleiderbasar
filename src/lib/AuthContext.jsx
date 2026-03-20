@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
       return;
     }
     checkAppState();
-  }, []);
+  }, [appParams.appId, appParams.token]);
 
   const checkAppState = async () => {
     try {
