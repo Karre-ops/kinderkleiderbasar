@@ -27,20 +27,21 @@ export default function SellerReport({ sales, commissionRate }) {
     return Object.values(map).sort((a, b) => a.sellerNumber.localeCompare(b.sellerNumber));
   }, [sales]);
 
-  const exportCSV = () => {
+  const exportAllCSV = () => {
     const header = "Verkäufer;Artikel;Umsatz (€);Kindergarten-Anteil (€);Auszahlung (€)";
     const rows = sellerData.map(
-      (s) =>
-        `${s.sellerNumber};${s.items};${s.total.toFixed(2)};${s.commission.toFixed(2)};${s.payout.toFixed(2)}`
+      (s) => `${s.sellerNumber};${s.items};${s.total.toFixed(2)};${s.commission.toFixed(2)};${s.payout.toFixed(2)}`
     );
-    const csv = [header, ...rows].join("\n");
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "verkaeuferbericht.csv";
-    a.click();
-    URL.revokeObjectURL(url);
+    downloadCSV([header, ...rows].join("\n"), "verkaeuferbericht_gesamt.csv");
+  };
+
+  const exportSellerCSV = (seller) => {
+    const sellerSales = sales.filter((s) => s.seller_number === seller.sellerNumber);
+    const header = "Datum;Transaktion;Preis (€);Kindergarten-Anteil (€);Auszahlung (€)";
+    const rows = sellerSales.map((s) =>
+      `${s.transaction_completed_at ? new Date(s.transaction_completed_at).toLocaleString("de-DE") : ""};${s.transaction_id};${(s.price || 0).toFixed(2)};${(s.commission_amount || 0).toFixed(2)};${(s.seller_payout || 0).toFixed(2)}`
+    );
+    downloadCSV([header, ...rows].join("\n"), `verkaeuferbericht_${seller.sellerNumber}.csv`);
   };
 
   if (sellerData.length === 0) {
