@@ -16,7 +16,8 @@ Deno.serve(async (req) => {
           base44.asServiceRole.entities.Bazaar.filter({ id: bazaarId }),
           base44.asServiceRole.entities.Settings.filter({ bazaar_id: bazaarId }),
         ]);
-      } catch (_) {
+      } catch (error) {
+        console.error("Error loading bazaar/settings:", error.message);
         return Response.json({ bazaars: [], hasPassword: false, commissionRate: 10 });
       }
 
@@ -37,6 +38,8 @@ Deno.serve(async (req) => {
       if (stored && stored === password) {
         return Response.json({ ok: true });
       }
+      // Rate-limiting: add delay on failed attempt
+      await new Promise(resolve => setTimeout(resolve, 100));
       return Response.json({ ok: false }, { status: 401 });
     }
 
@@ -48,9 +51,8 @@ Deno.serve(async (req) => {
         return Response.json({ error: "Unauthorized" }, { status: 401 });
       }
 
-      // K2: Load commissionRate from DB, never trust the client
-      const commissionRateSetting = settings.find((s) => s.key === "commission_rate");
-      const commissionRate = parseFloat(commissionRateSetting?.value ?? "10");
+      // K2: Load commissionRate from DB, never trust the client (reuse settings from above)
+      const commissionRate = parseFloat(settings.find((s) => s.key === "commission_rate")?.value ?? "10");
 
       // M2: Basic input validation
       if (!Array.isArray(items) || items.length === 0) {
@@ -67,7 +69,11 @@ Deno.serve(async (req) => {
         }
       }
 
-      const transactionId = `TXN-${Date.now()}`;
+      // Generate unique transaction ID using crypto + timestamp
+      const randomBytes = new Uint8Array(4);
+      crypto.getRandomValues(randomBytes);
+      const randomHex = Array.from(randomBytes).map(b => b.toString(16).padStart(2, '0')).join('');
+      const transactionId = `TXN-${Date.now()}-${randomHex}`;
       const now = new Date().toISOString();
 
       const saleRecords = items.map((item) => {
