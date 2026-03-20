@@ -35,7 +35,12 @@ export default function SellerReport({ sales, commissionRate }) {
     const rows = sellerData.map(
       (s) => `${s.sellerNumber};${s.items};${num(s.total)};${num(s.commission)};${num(s.payout)}`
     );
-    downloadCSV([header, ...rows].join("\n"), "verkaeuferbericht_gesamt.csv");
+    const totalItems = sellerData.reduce((s, r) => s + r.items, 0);
+    const totalTotal = sellerData.reduce((s, r) => s + r.total, 0);
+    const totalCommission = sellerData.reduce((s, r) => s + r.commission, 0);
+    const totalPayout = sellerData.reduce((s, r) => s + r.payout, 0);
+    const sumRow = `Gesamt;${totalItems};${num(totalTotal)};${num(totalCommission)};${num(totalPayout)}`;
+    downloadCSV([header, ...rows, "", sumRow].join("\n"), "verkaeuferbericht_gesamt.csv");
   };
 
   const exportSellerCSV = (seller) => {
