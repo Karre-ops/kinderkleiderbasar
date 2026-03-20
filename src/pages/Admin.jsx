@@ -126,6 +126,10 @@ export default function Admin() {
               />
             </div>
           </TabsContent>
+
+          <TabsContent value="access" className="mt-6">
+            <BazaarAccessSettings bazaarId={selectedBazaar.id} />
+          </TabsContent>
         </Tabs>
       </div>
     </div>
