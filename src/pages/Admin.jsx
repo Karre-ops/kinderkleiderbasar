@@ -30,7 +30,13 @@ export default function Admin() {
 
   const { data: settings = [], refetch: refetchSettings } = useQuery({
     queryKey: ["settings", selectedBazaar?.id],
-    queryFn: () => base44.entities.Settings.filter({ bazaar_id: selectedBazaar?.id }),
+    queryFn: async () => {
+      const res = await base44.functions.invoke("kassePublic", {
+        action: "getAdminSettings",
+        bazaarId: selectedBazaar?.id,
+      });
+      return res.data?.settings ?? [];
+    },
     enabled: !!selectedBazaar,
   });
 
