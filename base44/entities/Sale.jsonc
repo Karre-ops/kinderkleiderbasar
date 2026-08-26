@@ -1,0 +1,51 @@
+{
+  "name": "Sale",
+  "type": "object",
+  "properties": {
+    "bazaar_id": {
+      "type": "string",
+      "description": "ID des Basars"
+    },
+    "transaction_id": {
+      "type": "string",
+      "description": "Unique transaction identifier"
+    },
+    "cash_register": {
+      "type": "string",
+      "description": "Cash register identifier"
+    },
+    "seller_number": {
+      "type": "string",
+      "description": "3-digit seller number (001-999)"
+    },
+    "price": {
+      "type": "number",
+      "description": "Item price in EUR"
+    },
+    "commission_rate": {
+      "type": "number",
+      "description": "Commission percentage taken at time of sale"
+    },
+    "commission_amount": {
+      "type": "number",
+      "description": "Commission amount in EUR"
+    },
+    "seller_payout": {
+      "type": "number",
+      "description": "Amount to be paid to seller after commission"
+    },
+    "transaction_completed_at": {
+      "type": "string",
+      "description": "ISO timestamp when transaction was completed"
+    },
+    "cashier_name": {
+      "type": "string",
+      "description": "Name/identifier of the cashier"
+    }
+  },
+  "required": [
+    "bazaar_id",
+    "seller_number",
+    "price"
+  ]
+}

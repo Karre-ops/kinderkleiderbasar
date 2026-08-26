@@ -1,0 +1,27 @@
+{
+  "name": "Settings",
+  "type": "object",
+  "properties": {
+    "bazaar_id": {
+      "type": "string",
+      "description": "ID des Basars"
+    },
+    "key": {
+      "type": "string",
+      "description": "Setting key"
+    },
+    "value": {
+      "type": "string",
+      "description": "Setting value"
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable description"
+    }
+  },
+  "required": [
+    "bazaar_id",
+    "key",
+    "value"
+  ]
+}

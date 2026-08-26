@@ -1,0 +1,27 @@
+{
+  "name": "BazaarAccess",
+  "type": "object",
+  "properties": {
+    "bazaar_id": {
+      "type": "string",
+      "description": "ID des Basars"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "E-Mail des Benutzers"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "cashier"
+      ],
+      "description": "Rolle des Benutzers in diesem Basar"
+    }
+  },
+  "required": [
+    "bazaar_id",
+    "user_email",
+    "role"
+  ]
+}

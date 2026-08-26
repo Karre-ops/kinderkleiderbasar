@@ -1,0 +1,27 @@
+{
+  "name": "Bazaar",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name des Basars"
+    },
+    "location": {
+      "type": "string",
+      "description": "Ort des Basars"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Datum des Basars"
+    },
+    "is_active": {
+      "type": "boolean",
+      "description": "Ob der Basar aktiv ist",
+      "default": true
+    }
+  },
+  "required": [
+    "name"
+  ]
+}
